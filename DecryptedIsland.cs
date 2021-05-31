@@ -9,7 +9,6 @@ namespace Production
         string path;
         StreamReader buffer;
         List<string> fileLines;
-        string decrypted;
         string encrypted;
 
         public DecryptedIsland(string p)
@@ -41,7 +40,12 @@ namespace Production
             while ((line = buffer.ReadLine()) != null)
                 fileLines.Add(line);
 
-            decrypted = String.Join("\n", fileLines.ToArray());
+            this.CloseFile();
+        }
+
+        private void CloseFile()
+        {
+            buffer.Close();
         }
 
         public void Encrypt()
@@ -85,7 +89,7 @@ namespace Production
 
         public void Display()
         {
-            Console.WriteLine("Decrypted map:\n{0}\n\nEncrypted map:\n{1}", decrypted, encrypted);
+            Console.WriteLine("Encrypted map:\n{0}", encrypted);
         }
     }
 }

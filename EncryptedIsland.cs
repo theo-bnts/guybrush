@@ -7,40 +7,34 @@ namespace Production
 {
     class EncryptedIsland
     {
-        string path;
-        StreamReader buffer;
+        const string alphabet = "abcdefghijklmnopqrstuvwxyz";
+
         string fileLine;
-        string decrypted;
-        string encrypted;
-        string[] lines;
         List<List<int>> cells;
         List<List<List<int>>> zones;
 
-
-        public EncryptedIsland(string p)
+        public EncryptedIsland(string path)
         {
-            path = p;
+            this.GetFileLine(path);
         }
 
-        private void GetFileBuffer()
+        private void GetFileLine(string path)
         {
+            StreamReader file;
+
             try
             {
-                buffer = new StreamReader(path);
+                file = new StreamReader(path);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return;
             }
-        }
 
-        public void GetFileLine()
-        {
-            this.GetFileBuffer();
+            fileLine = file.ReadLine();
 
-            fileLine = buffer.ReadLine();
-            encrypted = fileLine;
+            file.Close();
         }
 
         public void Decrypt()
@@ -48,9 +42,7 @@ namespace Production
             cells = new List<List<int>>();
             zones = new List<List<List<int>>>();
 
-            lines = fileLine.Split('|');
-
-            foreach (string line in lines)
+            foreach (string line in fileLine.Split('|'))
             {
                 cells.Add(new List<int> { });
 
@@ -110,11 +102,9 @@ namespace Production
                 }
         }
 
-        public void Display()
+        public void DisplayDecryptedMap()
         {
-            Console.WriteLine("Encrypted map:\n{0}\n\nDecrypted map:", encrypted);
-
-            const string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            Console.WriteLine("Decrypted map:");
 
             char[,] cellsDisplay = new char[cells.Count, cells[0].Count];
 
@@ -132,7 +122,9 @@ namespace Production
                 for (int j = 0; j < cells[i].Count; j++)
                 {
                     if (alphabet.Contains(cellsDisplay[j, i]))
+                    {
                         Console.Write(cellsDisplay[j, i]);
+                    }
                     else if (cells[i][j] >= 64)
                     {
                         Console.ForegroundColor = ConsoleColor.Blue;
@@ -144,11 +136,63 @@ namespace Production
                         Console.Write('F');
                     }
 
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ResetColor();
                 }
 
                 Console.WriteLine();
             }
+
+            Console.WriteLine();
+        }
+
+        private int GetZoneSize(int zoneIndex)
+        {
+            List<List<int>> zone = zones[zoneIndex];
+
+            return zone.Count();
+        }
+
+        private void DisplayZone(int zoneIndex)
+        {
+            Console.Write("{0} [{1} cells] > ", alphabet[zoneIndex], GetZoneSize(zoneIndex));
+
+            foreach (List<int> cellXY in zones[zoneIndex])
+                Console.Write("({0},{1}); ", cellXY[0], cellXY[1]);
+
+            Console.WriteLine();
+        }
+
+        public void DisplayZones()
+        {
+            Console.WriteLine("Zones:");
+
+            for (var i = 0; i < zones.Count(); i++)
+                this.DisplayZone(i);
+
+            Console.WriteLine();
+        }
+
+        public void DisplayZonesIndentifiers(int minimumSize)
+        {
+            Console.Write("Identiants des zones contenant au moins {0} cellule{1}: ", minimumSize, minimumSize > 1 ? 's' : null);
+
+            for (var i = 0; i < zones.Count(); i++)
+                if (GetZoneSize(i) >= minimumSize)
+                    Console.Write("{0}; ", alphabet[i]);
+
+            Console.WriteLine();
+            Console.WriteLine();
+        }
+
+        public double GetAverageZonesSize()
+        {
+            int zonesCount = zones.Count();
+            double sum = 0;
+
+            for (var i = 0; i < zonesCount; i++)
+                sum += GetZoneSize(i);
+
+            return Math.Round(sum / zonesCount, 2);
         }
     }
 }
