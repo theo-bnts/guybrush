@@ -85,10 +85,12 @@ namespace Production
         {
             int sum = 0;
 
-            foreach (Parcel parcel in parcels)
+            List<Parcel> groundParcels = parcels.FindAll(p => p.Type == 'G');
+
+            foreach (Parcel parcel in groundParcels)
                 sum += parcel.Units.Count;
 
-            double value = Math.Round((double)sum / parcels.Count, 2);
+            double value = Math.Round((double)sum / groundParcels.Count, 2); 
 
             Console.WriteLine("Average area : {0}", value);
             Console.WriteLine();
