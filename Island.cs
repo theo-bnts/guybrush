@@ -6,13 +6,29 @@ namespace Production
 {
     abstract class Island
     {
+        #region Attributs
+        /// <summary>
+        /// Liste des parcelles
+        /// </summary>
         protected List<Parcel> parcels;
+        #endregion
 
-        public Island()
+        #region Constructeurs
+        /// <summary>
+        /// Constructeur de la classe mère Island
+        /// </summary>
+        protected Island()
         {
             parcels = new List<Parcel> {};
         }
+        #endregion
 
+        #region Méthodes
+        /// <summary>
+        /// Lire et retourner les lignes du fichier
+        /// </summary>
+        /// <param name="path">Chemin d'accès du fichier</param>
+        /// <returns>Liste de lignes</returns>
         protected List<string> GetFileLines(string path)
         {
             StreamReader file;
@@ -37,6 +53,9 @@ namespace Production
             return lines;
         }
 
+        /// <summary>
+        /// Affiche la liste des parcelles de terre
+        /// </summary>
         public void DisplayParcels()
         {
             foreach (Parcel parcel in parcels)
@@ -44,6 +63,10 @@ namespace Production
                     parcel.Display();
         }
 
+        /// <summary>
+        /// Affiche la liste des parcelles de terre d'une taille minimale
+        /// </summary>
+        /// <param name="minSize">Taille minimale</param>
         public void DisplayParcels(int minSize)
         {
             bool parcelFinded = false;
@@ -63,6 +86,10 @@ namespace Production
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Afficher la taille d'une parcelle donnée
+        /// </summary>
+        /// <param name="parcelIdentifier">Nom de la parcelle</param>
         public void DisplayParcelSize(char parcelIdentifier)
         {
             bool exist = false;
@@ -81,6 +108,10 @@ namespace Production
             Console.WriteLine("Parcel {0} size : {1} units\n", parcelIdentifier, parcelSize);
         }
 
+        /// <summary>
+        /// Afficher et retourner la taille moyenne des parcelles
+        /// </summary>
+        /// <returns>Taille moyenne des parcelles</returns>
         public double DisplayAverageParcelsSize()
         {
             int sum = 0;
@@ -98,6 +129,9 @@ namespace Production
             return value;
         }
 
+        /// <summary>
+        /// Afficher la carte décodée
+        /// </summary>
         public void DisplayDecodedMap()
         {
             char[,] bitmap = new char[10, 10];
@@ -127,6 +161,9 @@ namespace Production
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Afficher la carte encodée
+        /// </summary>
         public void DisplayEncodedMap()
         {
             int[,] bitmap = new int[10, 10];
@@ -151,5 +188,6 @@ namespace Production
             Console.WriteLine();
             Console.WriteLine();
         }
+        #endregion
     }
 }

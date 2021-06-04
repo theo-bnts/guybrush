@@ -5,11 +5,20 @@ namespace Production
 {
     class EncodedIsland : Island
     {
+        /// <summary>
+        /// Constructeur de la classe fille EncodedIsland
+        /// </summary>
+        /// <param name="path">Chemin du fichier</param>
         public EncodedIsland(string path) : base()
         {
             BuildUnitsFromFile(path);
         }
 
+        /// <summary>
+        /// Décomposition du constructeur de la classe EncodedIsland
+        /// Construire les objets unités de l'île
+        /// </summary>
+        /// <param name="path">Chemin du fichier</param>
         private void BuildUnitsFromFile(string path)
         {
             List<string> lines = base.GetFileLines(path);
@@ -40,10 +49,15 @@ namespace Production
                 y++;
             }
 
-            AddUnitsInParcels(units);
+            BuildParcelsAndAddUnits(units);
         }
 
-        private void AddUnitsInParcels(List<Unit> units)
+        /// <summary>
+        /// Suite de la décomposition du constructeur de la classe EncodedIsland
+        /// Construire les parcelles et classer les unités dans celle-ci
+        /// </summary>
+        /// <param name="units">Unités précédemment construites</param>
+        private void BuildParcelsAndAddUnits(List<Unit> units)
         {
             string alphabet = "abcdefghijklmnopqrstuvwxyz";
             char[] defaultBorders = new char[] { 'N', 'W', 'S', 'E' };

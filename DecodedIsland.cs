@@ -5,12 +5,11 @@ namespace Production
 {
     class DecodedIsland : Island
     {
+        /// <summary>
+        /// Constructeur de la classe fille DecodedIsland
+        /// </summary>
+        /// <param name="path">Chemin du fichier</param>
         public DecodedIsland(string path) : base()
-        {
-            BuildParcelsFromFile(path);
-        }
-
-        private void BuildParcelsFromFile(string path)
         {
             List<string> lines = base.GetFileLines(path);
 

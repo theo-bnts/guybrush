@@ -5,20 +5,62 @@ namespace Production
 {
     class Unit
     {
+        #region Attributs
+        /// <summary>
+        /// Type
+        /// </summary>
         char type;
+
+        /// <summary>
+        /// Abscise
+        /// </summary>
+        int x;
+        
+        /// <summary>
+        /// Ordonnée
+        /// </summary>
+        int y;
+        
+        /// <summary>
+        /// Valeur
+        /// </summary>
+        int value;
+        
+        /// <summary>
+        /// Liste des frontières
+        /// </summary>
+        List<char> borders;
+        #endregion
+
+        #region Accesseurs
+        /// <summary>
+        /// Accesseur en lecture pour l'attribut type
+        /// </summary>
         public char Type { get => type; }
 
-        int x;
+        /// <summary>
+        /// Accesseur en lecture pour l'attribut x
+        /// </summary>
         public int X { get => x; }
 
-        int y;
+        /// <summary>
+        /// Accesseur en lecture pour l'attribut y
+        /// </summary>
         public int Y { get => y; }
 
-        int value;
+        /// <summary>
+        /// Accesseur en lecture pour l'attribut value
+        /// </summary>
         public int Value { get => value; }
+        #endregion
 
-        List<char> borders;
-
+        #region Constructeurs
+        /// <summary>
+        /// Constructeur de la classe Unit
+        /// </summary>
+        /// <param name="x">Abscise</param>
+        /// <param name="y">Ordonnée</param>
+        /// <param name="value">Valeur</param>
         public Unit(int x, int y, int value)
         {
             this.x = x;
@@ -29,16 +71,10 @@ namespace Production
             FindBorders();
         }
 
-        public Unit(int x, int y, char type, List<char> borders)
-        {
-            this.x = x;
-            this.y = y;
-            this.type = type;
-            this.borders = borders;
-
-            CalculValue();
-        }
-
+        /// <summary>
+        /// Décomposition du constructeur de la classe Unit
+        /// Détermine le type de l'unité
+        /// </summary>
         private void FindType()
         {
             if (value >= 64)
@@ -49,6 +85,10 @@ namespace Production
                 type = 'G';
         }
 
+        /// <summary>
+        /// Suite de la décomposition du constructeur de la classe Unit
+        /// Détermine les frontières de l'unité
+        /// </summary>
         private void FindBorders()
         {
             int rest = value;
@@ -60,11 +100,11 @@ namespace Production
 
             char[] defaultBorderList = new char[] { 'N', 'W', 'S', 'E' };
 
-            borders = new List<char> {};
+            borders = new List<char> { };
 
             for (var i = defaultBorderList.Length - 1; i >= 0; i--)
             {
-                int identifier = (int) Math.Pow(2, i);
+                int identifier = (int)Math.Pow(2, i);
                 char border = defaultBorderList[i];
 
                 if (rest >= identifier)
@@ -75,6 +115,27 @@ namespace Production
             }
         }
 
+        /// <summary>
+        /// Surcharge du constructeur de la classe Unit
+        /// </summary>
+        /// <param name="x">Abscise</param>
+        /// <param name="y">Ordonnée</param>
+        /// <param name="type">Type</param>
+        /// <param name="borders">Liste des frontières</param>
+        public Unit(int x, int y, char type, List<char> borders)
+        {
+            this.x = x;
+            this.y = y;
+            this.type = type;
+            this.borders = borders;
+
+            CalculValue();
+        }
+
+        /// <summary>
+        /// Décomposition de la surcharge du constructeur de la classe Unit
+        /// Détermine la valeur de l'unité
+        /// </summary>
         private void CalculValue()
         {
             value = 0;
@@ -94,7 +155,14 @@ namespace Production
                 case 'M': value += 64; break;
             }
         }
+        #endregion
 
+        #region Méthodes
+        /// <summary>
+        /// Retourne s'il y a une frontière dans la direction specifiée
+        /// </summary>
+        /// <param name="location">Direction</param>
+        /// <returns>Présence de la frontière</returns>
         public bool IsBorderIn(char location)
         {
             if (borders.Contains(location))
@@ -103,9 +171,14 @@ namespace Production
                 return false;
         }
 
+        /// <summary>
+        /// Retoune l'affichage des coordonnées de l'objet
+        /// </summary>
+        /// <returns>Affichage des coordonnées</returns>
         public string DisplayCoordinates()
         {
             return $"({x},{y})";
         }
+        #endregion
     }
 }
