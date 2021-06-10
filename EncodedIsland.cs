@@ -70,33 +70,46 @@ namespace Production
             int neighbourX;
             int neighbourY;
 
-            bool addedInAParcel;
-
-            foreach (Unit unit in units)
+            while (units.Count > 0)
             {
-                addedInAParcel = false;
+                List<Unit> unitsInTheSameParcel = new List<Unit> { units[0] };
 
-                foreach (char border in defaultBorders)
-                    foreach (Parcel parcel in parcels)
-                        if (!unit.IsBorderIn(border))
+                if (unitsInTheSameParcel[0].Type == 'G')
+                {
+                    parcelIdentifier = alphabet[parcelIdentifierIndex];
+                    parcelIdentifierIndex++;
+                }
+                else
+                    parcelIdentifier = unitsInTheSameParcel[0].Type;
+
+                Parcel parcel = new Parcel(unitsInTheSameParcel[0].Type, parcelIdentifier);
+                parcels.Add(parcel);
+
+                while (unitsInTheSameParcel.Count > 0)
+                {
+                    parcel.Units.Add(unitsInTheSameParcel[0]);
+
+                    foreach (char border in defaultBorders)
+                    {
+                        if (!unitsInTheSameParcel[0].IsBorderIn(border))
                         {
                             switch (border)
                             {
                                 case 'N':
-                                    neighbourX = unit.X;
-                                    neighbourY = unit.Y - 1;
+                                    neighbourX = unitsInTheSameParcel[0].X;
+                                    neighbourY = unitsInTheSameParcel[0].Y - 1;
                                     break;
                                 case 'W':
-                                    neighbourX = unit.X - 1;
-                                    neighbourY = unit.Y;
+                                    neighbourX = unitsInTheSameParcel[0].X - 1;
+                                    neighbourY = unitsInTheSameParcel[0].Y;
                                     break;
                                 case 'S':
-                                    neighbourX = unit.X;
-                                    neighbourY = unit.Y + 1;
+                                    neighbourX = unitsInTheSameParcel[0].X;
+                                    neighbourY = unitsInTheSameParcel[0].Y + 1;
                                     break;
                                 case 'E':
-                                    neighbourX = unit.X + 1;
-                                    neighbourY = unit.Y;
+                                    neighbourX = unitsInTheSameParcel[0].X + 1;
+                                    neighbourY = unitsInTheSameParcel[0].Y;
                                     break;
                                 default:
                                     neighbourX = -1;
@@ -104,30 +117,18 @@ namespace Production
                                     break;
                             }
 
-                            foreach (Unit secondUnit in parcel.Units.ToArray())
+                            if (units.Exists(u => u.X == neighbourX && u.Y == neighbourY))
                             {
-                                if (!addedInAParcel && neighbourX == secondUnit.X && neighbourY == secondUnit.Y)
-                                {
-                                    parcel.Units.Add(unit);
-                                    addedInAParcel = true;
-                                }
+                                unitsInTheSameParcel.Add(
+                                    units.Find(u => u.X == neighbourX && u.Y == neighbourY)
+                                );
                             }
                         }
-
-                if (!addedInAParcel)
-                {
-                    if (unit.Type == 'G')
-                    {
-                        parcelIdentifier = alphabet[parcelIdentifierIndex];
-                        parcelIdentifierIndex++;
                     }
-                    else
-                        parcelIdentifier = unit.Type;
 
-                    parcels.Add(new Parcel(unit.Type, parcelIdentifier));
-                    parcels[parcels.Count - 1].Units.Add(unit);
+                    units.Remove(unitsInTheSameParcel[0]);
+                    unitsInTheSameParcel.RemoveAt(0);
                 }
-                    
             }
         }
     }
