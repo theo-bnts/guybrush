@@ -8,8 +8,8 @@ namespace Production
         {
             DecodedIsland i1 = new DecodedIsland("../../../islands/Scabb.clair");
 
-            i1.DisplayEncodedMap();
-            i1.DisplayDecodedMap();
+            i1.DisplayAndSaveEncodedMap();
+            i1.DisplayAndSaveDecodedMap();
             i1.DisplayParcels();
             i1.DisplayParcels(4);
             i1.DisplayAverageParcelsSize();
@@ -17,8 +17,8 @@ namespace Production
 
             EncodedIsland i2 = new EncodedIsland("../../../islands/Scabb.chiffre");
 
-            i2.DisplayEncodedMap();
-            i2.DisplayDecodedMap();
+            i2.DisplayAndSaveEncodedMap();
+            i2.DisplayAndSaveDecodedMap();
             i2.DisplayParcels();
             i2.DisplayParcels(4);
             i2.DisplayAverageParcelsSize();

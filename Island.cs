@@ -8,6 +8,11 @@ namespace Production
     {
         #region Attributs
         /// <summary>
+        /// Chemin de l'île sans l'exstenion de fichier
+        /// </summary>
+        protected string pathWithoutExtension;
+        
+        /// <summary>
         /// Liste des parcelles
         /// </summary>
         protected List<Parcel> parcels;
@@ -24,35 +29,6 @@ namespace Production
         #endregion
 
         #region Méthodes
-        /// <summary>
-        /// Lire et retourner les lignes du fichier
-        /// </summary>
-        /// <param name="path">Chemin d'accès du fichier</param>
-        /// <returns>Liste de lignes</returns>
-        protected List<string> GetFileLines(string path)
-        {
-            StreamReader file;
-            List<string> lines = new List<string> {};
-
-            try
-            {
-                file = new StreamReader(path);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                throw;
-            }
-
-            string line;
-            while ((line = file.ReadLine()) != null)
-                lines.Add(line);
-
-            file.Close();
-
-            return lines;
-        }
-
         /// <summary>
         /// Affiche la liste des parcelles de terre
         /// </summary>
@@ -130,11 +106,14 @@ namespace Production
         }
 
         /// <summary>
-        /// Afficher la carte décodée
+        /// Afficher et enregistrer la carte décodée
         /// </summary>
-        public void DisplayDecodedMap()
+        public void DisplayAndSaveDecodedMap()
         {
             char[,] bitmap = new char[10, 10];
+            string path;
+            List<string> lines = new List<string> { };
+            string line;
 
             foreach (Parcel parcel in parcels)
                 foreach (Unit unit in parcel.Units)
@@ -142,6 +121,8 @@ namespace Production
 
             for (int i = 0; i < bitmap.GetLength(0); i++)
             {
+                line = "";
+
                 for (int j = 0; j < bitmap.GetLength(1); j++)
                 {
                     if (bitmap[i, j] == 'M')
@@ -153,20 +134,31 @@ namespace Production
                     Console.Write(bitmap[i, j]);
 
                     Console.ResetColor();
+
+                    line += bitmap[i, j];
                 }
 
                 Console.WriteLine();
+
+                lines.Add(line);
             }
 
             Console.WriteLine();
+
+            path = pathWithoutExtension + ".clair";
+
+            Tools.WriteFileLines(path, lines);
         }
 
         /// <summary>
-        /// Afficher la carte encodée
+        /// Afficher et enregistrer la carte encodée
         /// </summary>
-        public void DisplayEncodedMap()
+        public void DisplayAndSaveEncodedMap()
         {
             int[,] bitmap = new int[10, 10];
+            string path;
+            List<string> lines = new List<string> { };
+            string line = "";
 
             foreach (Parcel parcel in parcels)
                 foreach (Unit unit in parcel.Units)
@@ -176,17 +168,23 @@ namespace Production
             {
                 for (int j = 0; j < bitmap.GetLength(1); j++)
                 {
-                    Console.Write(bitmap[i, j]);
+                    line += bitmap[i, j];
 
                     if (j < bitmap.GetLength(1) - 1)
-                        Console.Write(':');
+                        line += ':';
                 }
 
-                Console.Write('|');
+                line += '|';
             }
 
+            Console.WriteLine(line);
             Console.WriteLine();
-            Console.WriteLine();
+
+            lines.Add(line);
+
+            path = pathWithoutExtension + ".chiffre";
+
+            Tools.WriteFileLines(path, lines);
         }
         #endregion
     }

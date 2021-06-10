@@ -11,6 +11,8 @@ namespace Production
         /// <param name="path">Chemin du fichier</param>
         public EncodedIsland(string path) : base()
         {
+            pathWithoutExtension = path.Substring(0, path.LastIndexOf('.'));
+
             BuildUnitsFromFile(path);
         }
 
@@ -21,7 +23,7 @@ namespace Production
         /// <param name="path">Chemin du fichier</param>
         private void BuildUnitsFromFile(string path)
         {
-            List<string> lines = base.GetFileLines(path);
+            List<string> lines = Tools.GetFileLines(path);
 
             int y = 0;
             int x;

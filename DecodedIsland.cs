@@ -11,7 +11,9 @@ namespace Production
         /// <param name="path">Chemin du fichier</param>
         public DecodedIsland(string path) : base()
         {
-            List<string> lines = base.GetFileLines(path);
+            pathWithoutExtension = path.Substring(0, path.LastIndexOf('.'));
+
+            List<string> lines = Tools.GetFileLines(path);
 
             for (var y = 0; y < lines.Count; y++)
                 for (var x = 0; x < lines[y].Length; x++)
