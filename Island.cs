@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Production
 {
+    /// <summary>
+    /// Classe représentant une île
+    /// </summary>
     abstract class Island
     {
         #region Attributs
@@ -22,9 +25,11 @@ namespace Production
         /// <summary>
         /// Constructeur de la classe mère Island
         /// </summary>
-        protected Island()
+        protected Island(string path)
         {
             parcels = new List<Parcel> {};
+
+            pathWithoutExtension = path.Substring(0, path.LastIndexOf('.'));
         }
         #endregion
 
@@ -91,13 +96,14 @@ namespace Production
         public double DisplayAverageParcelsSize()
         {
             int sum = 0;
+            double value;
 
             List<Parcel> groundParcels = parcels.FindAll(p => p.Type == 'G');
 
             foreach (Parcel parcel in groundParcels)
                 sum += parcel.Units.Count;
 
-            double value = Math.Round((double)sum / groundParcels.Count, 2); 
+            value = Math.Round((double)sum / groundParcels.Count, 2); 
 
             Console.WriteLine("Average area : {0}", value);
             Console.WriteLine();

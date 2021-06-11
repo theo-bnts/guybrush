@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Production
 {
+    /// <summary>
+    /// Classe représentant une unité
+    /// </summary>
     class Unit
     {
         #region Attributs

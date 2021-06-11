@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Production
 {
+    /// <summary>
+    /// Classe représentant une parcelle
+    /// </summary>
     class Parcel
     {
         #region Attributs

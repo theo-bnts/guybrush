@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Production
 {
@@ -6,23 +6,33 @@ namespace Production
     {
         static void Main(string[] args)
         {
-            DecodedIsland i1 = new DecodedIsland("../../../islands/Scabb.clair");
+            Console.WriteLine("█▀ █▀▀ ▄▀█ █▄▄ █▄▄");
+            Console.WriteLine("▄█ █▄▄ █▀█ █▄█ █▄█");
+            Console.WriteLine();
 
-            i1.DisplayAndSaveEncodedMap();
-            i1.DisplayAndSaveDecodedMap();
-            i1.DisplayParcels();
-            i1.DisplayParcels(4);
-            i1.DisplayAverageParcelsSize();
-            i1.DisplayParcelSize('a');
+            DecodedIsland scabb = new DecodedIsland("../../../islands/Scabb.clair");
 
-            EncodedIsland i2 = new EncodedIsland("../../../islands/Scabb.chiffre");
+            scabb.DisplayAndSaveEncodedMap();
+            scabb.DisplayAndSaveDecodedMap();
+            scabb.DisplayParcels();
+            scabb.DisplayParcels(4);
+            scabb.DisplayAverageParcelsSize();
+            scabb.DisplayParcelSize('a');
 
-            i2.DisplayAndSaveEncodedMap();
-            i2.DisplayAndSaveDecodedMap();
-            i2.DisplayParcels();
-            i2.DisplayParcels(4);
-            i2.DisplayAverageParcelsSize();
-            i2.DisplayParcelSize('a');
+
+
+            Console.WriteLine("█▀█ █ █ ▄▀█ ▀█▀ ▀█▀");
+            Console.WriteLine("█▀▀ █▀█ █▀█  █   █ ");
+            Console.WriteLine();
+
+            EncodedIsland phatt = new EncodedIsland("../../../islands/Phatt.chiffre");
+
+            phatt.DisplayAndSaveEncodedMap();
+            phatt.DisplayAndSaveDecodedMap();
+            phatt.DisplayParcels();
+            phatt.DisplayParcels(4);
+            phatt.DisplayAverageParcelsSize();
+            phatt.DisplayParcelSize('a');
         }
     }
 }

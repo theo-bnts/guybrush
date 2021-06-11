@@ -3,37 +3,35 @@ using System.Collections.Generic;
 
 namespace Production
 {
+    /// <summary>
+    /// Classe héritée de la classe Island
+    /// Permet de créer une île à partir d'un fichier de type .chiffre
+    /// </summary>
     class EncodedIsland : Island
     {
         /// <summary>
         /// Constructeur de la classe fille EncodedIsland
         /// </summary>
         /// <param name="path">Chemin du fichier</param>
-        public EncodedIsland(string path) : base()
+        public EncodedIsland(string path) : base(path)
         {
-            pathWithoutExtension = path.Substring(0, path.LastIndexOf('.'));
-
-            BuildUnitsFromFile(path);
+            BuildUnits(path);
         }
 
         /// <summary>
-        /// Décomposition du constructeur de la classe EncodedIsland
-        /// Construire les objets unités de l'île
+        /// Création de toutes les unités de l'île
         /// </summary>
         /// <param name="path">Chemin du fichier</param>
-        private void BuildUnitsFromFile(string path)
+        private void BuildUnits(string path)
         {
             List<string> lines = Tools.GetFileLines(path);
+            List<Unit> units = new List<Unit> { };
 
             int y = 0;
-            int x;
-
-            List<Unit> units = new List<Unit> {};
+            int x = 0;
 
             foreach (string line in lines[0].Split('|'))
             {
-                x = 0;
-
                 string[] values = line.Split(':');
 
                 foreach (string value in values)
@@ -41,7 +39,6 @@ namespace Production
                     if (value.Length > 0)
                     {
                         Unit unit = new Unit(x, y, Convert.ToInt16(value));
-
                         units.Add(unit);
 
                         x++;
@@ -49,85 +46,97 @@ namespace Production
                 }
 
                 y++;
+                x = 0;
             }
 
-            BuildParcelsAndAddUnits(units);
+            BuildParcels(units);
         }
 
         /// <summary>
-        /// Suite de la décomposition du constructeur de la classe EncodedIsland
-        /// Construire les parcelles et classer les unités dans celle-ci
+        /// Création des parcelles de l'île
         /// </summary>
         /// <param name="units">Unités précédemment construites</param>
-        private void BuildParcelsAndAddUnits(List<Unit> units)
+        private void BuildParcels(List<Unit> units)
         {
             string alphabet = "abcdefghijklmnopqrstuvwxyz";
-            char[] defaultBorders = new char[] { 'N', 'W', 'S', 'E' };
+
 
             char parcelIdentifier;
             int parcelIdentifierIndex = 0;
 
-            int neighbourX;
-            int neighbourY;
-
             while (units.Count > 0)
             {
-                List<Unit> unitsInTheSameParcel = new List<Unit> { units[0] };
+                List<Unit> newNeighborsUnits = new List<Unit> { units[0] };
 
-                if (unitsInTheSameParcel[0].Type == 'G')
+                if (newNeighborsUnits[0].Type == 'G')
                 {
                     parcelIdentifier = alphabet[parcelIdentifierIndex];
                     parcelIdentifierIndex++;
                 }
                 else
-                    parcelIdentifier = unitsInTheSameParcel[0].Type;
+                    parcelIdentifier = newNeighborsUnits[0].Type;
 
-                Parcel parcel = new Parcel(unitsInTheSameParcel[0].Type, parcelIdentifier);
+                Parcel parcel = new Parcel(newNeighborsUnits[0].Type, parcelIdentifier);
                 parcels.Add(parcel);
 
-                while (unitsInTheSameParcel.Count > 0)
+                while (newNeighborsUnits.Count > 0)
                 {
-                    parcel.Units.Add(unitsInTheSameParcel[0]);
+                    parcel.Units.Add(newNeighborsUnits[0]);
 
-                    foreach (char border in defaultBorders)
+                    FindNeighbors(units, ref newNeighborsUnits);
+
+                    units.Remove(newNeighborsUnits[0]);
+                    newNeighborsUnits.RemoveAt(0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Trouve les unités voisines qui sont dans la même parcelle
+        /// </summary>
+        /// <param name="units">Liste des unités précédemment construites</param>
+        /// <param name="newNeighborsUnits">Liste des nouvelles unités voisines</param>
+        private void FindNeighbors(List<Unit> units, ref List<Unit> newNeighborsUnits)
+        {
+            char[] defaultBorders = new char[] { 'N', 'W', 'S', 'E' };
+
+            int neighbourX;
+            int neighbourY;
+
+            foreach (char border in defaultBorders)
+            {
+                if (!newNeighborsUnits[0].IsBorderIn(border))
+                {
+                    switch (border)
                     {
-                        if (!unitsInTheSameParcel[0].IsBorderIn(border))
-                        {
-                            switch (border)
-                            {
-                                case 'N':
-                                    neighbourX = unitsInTheSameParcel[0].X;
-                                    neighbourY = unitsInTheSameParcel[0].Y - 1;
-                                    break;
-                                case 'W':
-                                    neighbourX = unitsInTheSameParcel[0].X - 1;
-                                    neighbourY = unitsInTheSameParcel[0].Y;
-                                    break;
-                                case 'S':
-                                    neighbourX = unitsInTheSameParcel[0].X;
-                                    neighbourY = unitsInTheSameParcel[0].Y + 1;
-                                    break;
-                                case 'E':
-                                    neighbourX = unitsInTheSameParcel[0].X + 1;
-                                    neighbourY = unitsInTheSameParcel[0].Y;
-                                    break;
-                                default:
-                                    neighbourX = -1;
-                                    neighbourY = -1;
-                                    break;
-                            }
-
-                            if (units.Exists(u => u.X == neighbourX && u.Y == neighbourY))
-                            {
-                                unitsInTheSameParcel.Add(
-                                    units.Find(u => u.X == neighbourX && u.Y == neighbourY)
-                                );
-                            }
-                        }
+                        case 'N':
+                            neighbourX = newNeighborsUnits[0].X;
+                            neighbourY = newNeighborsUnits[0].Y - 1;
+                            break;
+                        case 'W':
+                            neighbourX = newNeighborsUnits[0].X - 1;
+                            neighbourY = newNeighborsUnits[0].Y;
+                            break;
+                        case 'S':
+                            neighbourX = newNeighborsUnits[0].X;
+                            neighbourY = newNeighborsUnits[0].Y + 1;
+                            break;
+                        case 'E':
+                            neighbourX = newNeighborsUnits[0].X + 1;
+                            neighbourY = newNeighborsUnits[0].Y;
+                            break;
+                        default:
+                            neighbourX = -1;
+                            neighbourY = -1;
+                            break;
                     }
 
-                    units.Remove(unitsInTheSameParcel[0]);
-                    unitsInTheSameParcel.RemoveAt(0);
+                    if (units.Exists(u => u.X == neighbourX && u.Y == neighbourY)
+                    && !newNeighborsUnits.Exists(u => u.X == neighbourX && u.Y == neighbourY))
+                    {
+                        Unit unit = units.Find(u => u.X == neighbourX && u.Y == neighbourY);
+                        newNeighborsUnits.Add(unit);
+                    }
                 }
             }
         }

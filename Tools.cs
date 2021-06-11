@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Production
 {
+    /// <summary>
+    /// Classe abstraite permettant d'interagir avec des fichiers
+    /// </summary>
     static class Tools
     {
         /// <summary>
